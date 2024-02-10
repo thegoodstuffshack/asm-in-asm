@@ -9,5 +9,5 @@
 
 ### HOW TO RUN
 - using Make with qemu: ```make && make run```
-- or: ```nasm -f bin boot.asm -o test.bin && qemu-system-x86_64 test.bin``
+- or: ```nasm -f bin boot.asm -o test.bin && qemu-system-x86_64 test.bin```
 - or compile then then boot from usb on computer
