@@ -7,4 +7,4 @@ all: $(IN)
 	$(CC) $(IN) -o $(OUT) $(FLAGS)
 
 run:
-	qemu-system-x86_64 $(OUT)
+	make && qemu-system-x86_64 $(OUT)
