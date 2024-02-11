@@ -6,9 +6,16 @@ printChar:
 	int 0x10
 	ret
 
-;
-; printString:
-	; mov
+; input si as string address
+; input cl as string length
+printString:
+	mov ch, 0
+	mov ah, 0x0e
+.loop:
+	lodsb
+	int 0x10
+	loop .loop
+	ret
 
 ; push ax as input
 printHex:
@@ -36,7 +43,7 @@ printHex:
 	mov ah, 48
 .character:
 	add al, ah
-	mov ah, 0x0e,
+	mov ah, 0x0e
 	int 0x10
 	pop cx
 	loop .loop
