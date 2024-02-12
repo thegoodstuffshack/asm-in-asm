@@ -63,10 +63,10 @@ start:
 	cli
 	hlt
 
-%include "print.asm"
-%include "mouse.asm"
-%include "input.asm"
-%include "file_manager.asm"
+%include "src/print.asm"
+%include "src/mouse.asm"
+%include "src/input.asm"
+%include "src/file_manager.asm"
 
 times 510-($-$$) db 0
 dw 0xAA55

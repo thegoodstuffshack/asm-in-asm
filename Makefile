@@ -1,6 +1,6 @@
 CC = nasm
 FLAGS = -f bin
-IN = boot.asm
+IN = src/boot.asm
 OUT = test.bin
 
 all: $(IN)
