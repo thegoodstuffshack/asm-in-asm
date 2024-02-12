@@ -28,6 +28,7 @@ start:
 	
 .loop:
 	call getInput
+	call printInput
 	jmp .loop
 
 	cli

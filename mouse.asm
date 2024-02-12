@@ -14,12 +14,11 @@ moveMouse:
 	ret
 
 displayMouseCoords:	; convert 0x0000 to x, y
-	mov dx, 0x1848
-	mov [MOUSE_POS], dx
+	mov dx, 0x1848 ; set mouse to part of screen set for coords
 	call moveMouse
 
 .x_coords:	
-	mov ax, [MOUSE_POS]
+	mov ax, dx
 	cmp al, 10
 	jb .x_continue		; 62, 3E, 0011 1110
 	
@@ -39,7 +38,7 @@ displayMouseCoords:	; convert 0x0000 to x, y
 	call printChar
 	
 .y_coords:
-	mov ax, [MOUSE_POS]
+	mov ax, dx
 	cmp ah, 10
 	jb .y_continue
 	
