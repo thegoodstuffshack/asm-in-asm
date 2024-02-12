@@ -13,25 +13,29 @@ start:
 
 	dw 0x0EB0 	;;mov al, 14
 	call printChar
-	
 
 	push 0xB800
 	pop es
 	push word [ds:0x0002]
 	push word [es:0x0000]
-	call printHex
-	call printHex
+	call printHex ; print first char on screen's hex makeup
+	call printHex ; print second's
 
 	mov word [es:0x00F0], 0x0780
 	mov word [es:0x00F2], 0x0F0E
 
 	call displayMouseCoords
 	
+.loop:
+	call getInput
+	jmp .loop
+
 	cli
 	hlt
 
 %include "print.asm"
 %include "mouse.asm"
+%include "input.asm"
 
 times 510-($-$$) db 0
 dw 0xAA55
