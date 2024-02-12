@@ -1,26 +1,40 @@
 ;; mouse.asm
 
+; returns dh = row
+; returns dl = column
 getMouseCoords:
 	mov ah, 0x03
 	mov bh, [PAGE]
 	int 0x10
 	ret
 
-; input dx as dh, dl (row, col)
+; input dh as row
+; input dl as column
 moveMouse:
 	mov ah, 0x02
 	xor bx, bx
 	int 0x10
 	ret
 
+relMoveMouse:
+	push bp
+	mov bp, sp
+	call getMouseCoords
+	mov ax, [bp+4]
+	add dh, ah
+	add dl, al
+	call moveMouse
+	pop bp
+	ret 2 ; pop word
+
 displayMouseCoords:	; convert 0x0000 to x, y
 	mov dx, 0x1848 ; set mouse to part of screen set for coords
 	call moveMouse
 
 .x_coords:	
-	mov ax, dx
+	mov ax, [MOUSE_POS]
 	cmp al, 10
-	jb .x_continue		; 62, 3E, 0011 1110
+	jb .x_continue
 	
 	mov ah, 0
 	mov bl, 10
@@ -38,11 +52,11 @@ displayMouseCoords:	; convert 0x0000 to x, y
 	call printChar
 	
 .y_coords:
-	mov ax, dx
+	mov ax, [MOUSE_POS]
 	cmp ah, 10
 	jb .y_continue
 	
-	shr ax, 8	;FF 0000 0000 0000 0000
+	shr ax, 8
 	mov bl, 10
 	div bl
 	

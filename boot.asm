@@ -1,11 +1,39 @@
 [bits 16]
 [org 0x7c00]
-	dw 0x03EB	;;jmp short 0x05 (start)
+	jmp short start
 
+BOOT_DRIVE	db 0
 MOUSE_POS 	dw 0x0000
 PAGE		db 0
 
 start:
+	xor ax, ax
+	mov es, ax
+	mov ds, ax
+	mov ss, ax
+	mov sp, 0x7c00
+	
+	mov [BOOT_DRIVE], dl
+	
+	mov al, 14
+	call printChar
+
+	call checkDrives
+	push word [checkDrives.a]
+	call printHex
+	
+	push word [checkDrives.b]
+	call printHex
+
+	push word [checkDrives.c]
+	call printHex
+
+	push word [checkDrives.d]
+	call printHex
+	mov al, [BOOT_DRIVE]
+	call printChar
+	jmp $
+
 	; set video mode 3
 	dw 0x00B4	;;mov ah, 0
 	dw 0x03B0	;;mov al, 0x03
@@ -27,6 +55,7 @@ start:
 	call displayMouseCoords
 	
 .loop:
+	xor ax, ax
 	call getInput
 	call printInput
 	jmp .loop
@@ -37,6 +66,7 @@ start:
 %include "print.asm"
 %include "mouse.asm"
 %include "input.asm"
+%include "file_manager.asm"
 
 times 510-($-$$) db 0
 dw 0xAA55
