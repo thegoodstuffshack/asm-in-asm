@@ -9,3 +9,4 @@
 - [ ] save input code as both plaintext and binary (for debug)
 - [ ] be able to load code from file and edit
 - [ ] configurable text colour
+- [ ] tabs

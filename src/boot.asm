@@ -11,30 +11,10 @@ start:
 	mov es, ax
 	mov ds, ax
 	mov ss, ax
-	mov sp, 0x7c00
+	mov sp, 0x8000
+	mov bp, sp
 	
 	mov [BOOT_DRIVE], dl
-
-.next:
-	call checkDrives
-	push word [checkDrives.a]
-	call printHex
-	mov al, ' '
-	call printChar
-	push word [checkDrives.b]
-	call printHex
-	mov al, ' '
-	call printChar
-	push word [checkDrives.c]
-	call printHex
-	mov al, ' '
-	call printChar
-	push word [checkDrives.d]
-	call printHex
-	mov al, ' '
-	call printChar
-	mov al, [BOOT_DRIVE]
-	call printChar
 
 	; set video mode 3
 	dw 0x00B4	;;mov ah, 0
@@ -44,9 +24,44 @@ start:
 	dw 0x0EB0 	;;mov al, 14
 	call printChar
 
+	call getVideoMode
+	mov al, [PAGE]
+	add al, 48
+	call printChar											;===
+
+	push word 0x0001
+	mov ax, [bp-2]
+	add al, 48
+	call printChar											;===
+	mov ax, [bp-2] ; jic
+	mov al, 1
+	call setPage
+	call getVideoMode ; update PAGE in memory
+	mov [PAGE], bh
+	mov al, [PAGE]
+	add al, 48
+	call printChar											;===
+	
+	xor ah, ah
+	mov al, [PAGE]
+	cmp ax, [bp-2]
+	je .skip
+
+	mov al, 63
+	call printChar
+
+.skip:
+
+	; pop ax
+
+	jmp $
+
+	mov al, 10
+	call printChar
+
 	push 0xB800
 	pop es
-	push word [ds:0x0002]
+	push word [es:0x0002]
 	push word [es:0x0000]
 	call printHex ; print first char on screen's hex makeup
 	call printHex ; print second's
@@ -68,7 +83,10 @@ start:
 %include "src/print.asm"
 %include "src/mouse.asm"
 %include "src/input.asm"
-%include "src/file_manager.asm"
+; %include "src/file_manager.asm"
+%include "src/parse.asm"
+%include "src/compile.asm"
+%include "src/video.asm"
 
 times 510-($-$$) db 0
 dw 0xAA55

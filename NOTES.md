@@ -4,12 +4,15 @@
 - video memory address: 0xB8000
 - default memory is 0x0720 for light grey space
 - colours: https://en.wikipedia.org/wiki/BIOS_color_attributes
+- pages are 0x1000 bytes apart, max pages tbd
 
 # How ASM is converted to MC
 - for instructions that use relative addresses (e.g. calls, jumps), the address is the amount of bytes after the instruction
 
 ### some qemu stuff
 - qemu-system-x86_64 -drive if=none,id=usb,file=C:/TEMP/image.img -drive format=raw,file=test.bin
+- Dump 80 16 bit values at the start of the video memory: xp/80hx 0xb8000
+- pmemsave addr size file
 
 ## Instructions and their opcode, size, example, explanation
 | instruction    	    | opcode    | size | example         | explanation           |
