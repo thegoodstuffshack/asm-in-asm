@@ -14,25 +14,27 @@ start:
 	mov sp, 0x7c00
 	
 	mov [BOOT_DRIVE], dl
-	
-	mov al, 14
-	call printChar
 
+.next:
 	call checkDrives
 	push word [checkDrives.a]
 	call printHex
-	
+	mov al, ' '
+	call printChar
 	push word [checkDrives.b]
 	call printHex
-
+	mov al, ' '
+	call printChar
 	push word [checkDrives.c]
 	call printHex
-
+	mov al, ' '
+	call printChar
 	push word [checkDrives.d]
 	call printHex
+	mov al, ' '
+	call printChar
 	mov al, [BOOT_DRIVE]
 	call printChar
-	jmp $
 
 	; set video mode 3
 	dw 0x00B4	;;mov ah, 0

@@ -9,30 +9,25 @@ checkDrives:
 	int 0x13
 	jc .firsterror
 
-
 	mov word [.a], cx
 	mov word [.b], dx
 
-	mov cl, 0
-	push cx
+	mov dl, 0
+	push dx
 .loop:
-	pop cx
-	inc cl
-	mov al, 14
-	call printChar
-	push cx
+	pop dx
+	inc dl
+	push dx
 	; host drive?
 	mov ah, 0x08
-	mov dl, 0
+	; mov dl, 0
 	xor di, di
 	mov es, di
 	int 0x13
 	jc .loop
 
-	pop ax
-	; mov al, dl
-	call printChar
-	mov al, [BOOT_DRIVE]
+	pop dx
+	mov al, dl
 	call printChar
 
 	mov word [.c], cx

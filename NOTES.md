@@ -8,7 +8,8 @@
 # How ASM is converted to MC
 - for instructions that use relative addresses (e.g. calls, jumps), the address is the amount of bytes after the instruction
 
-
+### some qemu stuff
+- qemu-system-x86_64 -drive if=none,id=usb,file=C:/TEMP/image.img -drive format=raw,file=test.bin
 
 ## Instructions and their opcode, size, example, explanation
 | instruction    	    | opcode    | size | example         | explanation           |
