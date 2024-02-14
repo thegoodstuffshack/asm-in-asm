@@ -8,6 +8,7 @@ getVideoMode:
 	int 0x10
 	ret
 
+; should call getVideoMode after to verify page exists
 ; input al as new page number
 setPage:
 	mov ah, 0x05

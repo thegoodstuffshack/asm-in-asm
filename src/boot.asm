@@ -8,10 +8,11 @@ PAGE		db 0
 
 start:
 	xor ax, ax
+	jmp short $+0x02 ; 0x00EB - desired rel jump addr needs to have intstruction size added
 	mov es, ax
 	mov ds, ax
 	mov ss, ax
-	mov sp, 0x8000
+	mov sp, 0x7c00
 	mov bp, sp
 	
 	mov [BOOT_DRIVE], dl
@@ -24,57 +25,16 @@ start:
 	dw 0x0EB0 	;;mov al, 14
 	call printChar
 
-	call getVideoMode
-	mov al, [PAGE]
-	add al, 48
-	call printChar											;===
-
-	push word 0x0001
-	mov ax, [bp-2]
-	add al, 48
-	call printChar											;===
-	mov ax, [bp-2] ; jic
-	mov al, 1
+	mov al, 0
+	mov [PAGE], al
 	call setPage
-	call getVideoMode ; update PAGE in memory
-	mov [PAGE], bh
-	mov al, [PAGE]
-	add al, 48
-	call printChar											;===
-	
-	xor ah, ah
-	mov al, [PAGE]
-	cmp ax, [bp-2]
-	je .skip
 
-	mov al, 63
-	call printChar
-
-.skip:
-
-	; pop ax
-
-	jmp $
-
-	mov al, 10
-	call printChar
-
-	push 0xB800
-	pop es
-	push word [es:0x0002]
-	push word [es:0x0000]
-	call printHex ; print first char on screen's hex makeup
-	call printHex ; print second's
-
-	mov word [es:0x00F0], 0x0780
-	mov word [es:0x00F2], 0x0F0E
-
-	call displayMouseCoords
-	
 .loop:
 	xor ax, ax
 	call getInput
 	call printInput
+	call updateMouseCoords
+	call displayMouseCoords
 	jmp .loop
 
 	cli

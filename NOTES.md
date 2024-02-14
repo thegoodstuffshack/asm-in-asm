@@ -4,7 +4,8 @@
 - video memory address: 0xB8000
 - default memory is 0x0720 for light grey space
 - colours: https://en.wikipedia.org/wiki/BIOS_color_attributes
-- pages are 0x1000 bytes apart, max pages tbd
+- pages are 0x1000 bytes apart, max pages 8 (0-7), 0xB8000 - 0xBF000
+- current page offset from 0xb8000 found at word 40:4E, number at byte 40:62
 
 # How ASM is converted to MC
 - for instructions that use relative addresses (e.g. calls, jumps), the address is the amount of bytes after the instruction
