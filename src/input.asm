@@ -34,23 +34,55 @@ printInput:
 	ret ; if not arrows, do nothing
 
 .up:
-	push word 0xFF00
-	call relMoveMouse
+	; push word 0xFF00
+	; call relMoveMouse
+
+	mov dx, [MOUSE_POS]
+	or dh, dh
+	jz .skipup
+	dec dh
+	mov [MOUSE_POS], dx
+	call moveMouse
+.skipup:
 	ret
 
 .down:
-	push word 0x0100
-	call relMoveMouse
+	; push word 0x0100
+	; call relMoveMouse
+
+	mov dx, [MOUSE_POS]
+	cmp dh, 24
+	je .skipdown
+	inc dh
+	mov [MOUSE_POS], dx
+	call moveMouse
+.skipdown:
 	ret
 
 .left:
-	push word 0x00FF
-	call relMoveMouse
+	; push word 0x00FF
+	; call relMoveMouse
+
+	mov dx, [MOUSE_POS]
+	or dl, dl
+	jz .skipleft
+	dec dl
+	mov [MOUSE_POS], dx
+	call moveMouse
+.skipleft:
 	ret
 
 .right:
-	push word 0x0001
-	call relMoveMouse
+	; push word 0x0001
+	; call relMoveMouse
+
+	mov dx, [MOUSE_POS]
+	cmp dl, 79
+	je .skipright
+	inc dl
+	mov [MOUSE_POS], dx
+	call moveMouse
+.skipright:
 	ret
 
 .backspace:
@@ -59,6 +91,9 @@ printInput:
 	call printChar
 	mov al, 8
 	call printChar
+
+	push word [MOUSE_POS]
+	call printHex
 	ret
 
 .enter:

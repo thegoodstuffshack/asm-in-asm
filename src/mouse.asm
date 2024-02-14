@@ -17,17 +17,6 @@ moveMouse:
 	int 0x10
 	ret
 
-relMoveMouse:
-	push bp
-	mov bp, sp
-	call updateMouseCoords
-	mov ax, [bp+4]
-	add dh, ah	; could use MOUSE_POS
-	add dl, al 	; however 
-	call moveMouse
-	pop bp
-	ret 2 ; pop word
-
 displayMouseCoords:	; convert 0x0000 to x, y
 	mov dx, 0x184A ; location of mouse coord display
 	call moveMouse
