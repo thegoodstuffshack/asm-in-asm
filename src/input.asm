@@ -34,9 +34,6 @@ printInput:
 	ret ; if not arrows, do nothing
 
 .up:
-	; push word 0xFF00
-	; call relMoveMouse
-
 	mov dx, [MOUSE_POS]
 	or dh, dh
 	jz .skipup
@@ -47,9 +44,6 @@ printInput:
 	ret
 
 .down:
-	; push word 0x0100
-	; call relMoveMouse
-
 	mov dx, [MOUSE_POS]
 	cmp dh, 24
 	je .skipdown
@@ -60,9 +54,6 @@ printInput:
 	ret
 
 .left:
-	; push word 0x00FF
-	; call relMoveMouse
-
 	mov dx, [MOUSE_POS]
 	or dl, dl
 	jz .skipleft
@@ -73,9 +64,6 @@ printInput:
 	ret
 
 .right:
-	; push word 0x0001
-	; call relMoveMouse
-
 	mov dx, [MOUSE_POS]
 	cmp dl, 79
 	je .skipright
