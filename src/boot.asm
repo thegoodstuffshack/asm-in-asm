@@ -1,33 +1,48 @@
 [bits 16]
 [org 0x7c00]
-	jmp short start
+	jmp short start	; 2 bytes
 
-BOOT_DRIVE	db 0
-MOUSE_POS 	dw 0x0000
-PAGE		db 0
+;; "GLOBAL VARIABLES" - as in they have an assigned address
+START_ADDRESS	dw start	; 0x7c02
+BOOT_DRIVE		db 0		; 0x7c04
+
+;; "PROGRAM VARIABLES" - for use in this program only (memory can used in other programs, but why?)
+MOUSE_POS 		dw 0x0000
+PAGE			db 0
+
+;; "CONSTANTS" - shouldn't modify in other programs
+BOOT_BOOL		db 0	; set to 'true' on startup
 
 start:
 	xor ax, ax
-	jmp short $+0x02 ; 0x00EB - desired rel jump addr needs to have intstruction size added
+	jmp short $+0x02 ; 0x00EB - desired rel jump addr needs to have instruction size added
 	mov es, ax
 	mov ds, ax
 	mov ss, ax
 	mov sp, 0x7c00
 	mov bp, sp
-	
+
+;	protect BOOT_DRIVE from being overwritten when returning to program
+	cmp byte [BOOT_BOOL], 1
+	ja boot_bool_corrupted
+	je .notboot
+	mov byte [BOOT_BOOL], 1
 	mov [BOOT_DRIVE], dl
 
+.notboot:
 	; set video mode 3
 	dw 0x00B4	;;mov ah, 0
 	dw 0x03B0	;;mov al, 0x03
 	dw 0x10CD	;;int 0x10
 
-	dw 0x0EB0 	;;mov al, 14
-	call printChar
-
 	mov al, 0
 	mov [PAGE], al
 	call setPage
+	call updateMouseCoords
+	call displayMouseCoords
+
+	mov al, 14
+	call printChar
 
 .loop:
 	xor ax, ax
@@ -37,6 +52,8 @@ start:
 	call displayMouseCoords
 	jmp .loop
 
+boot_bool_corrupted:	;
+other_errors:			; currently undefined
 	cli
 	hlt
 

@@ -10,3 +10,4 @@
 - [ ] be able to load code from file and edit
 - [ ] configurable text colour
 - [ ] tabs
+- [ ] error messages

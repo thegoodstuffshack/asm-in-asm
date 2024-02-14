@@ -6,6 +6,7 @@
 - colours: https://en.wikipedia.org/wiki/BIOS_color_attributes
 - pages are 0x1000 bytes apart, max pages 8 (0-7), 0xB8000 - 0xBF000
 - current page offset from 0xb8000 found at word 40:4E, number at byte 40:62
+- screen scrolling when char's reach bottom of screen will erase the upper lines (need to change pages to preserve)
 
 # How ASM is converted to MC
 - for instructions that use relative addresses (e.g. calls, jumps), the address is the amount of bytes after the instruction

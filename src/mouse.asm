@@ -18,7 +18,7 @@ moveMouse:
 	ret
 
 displayMouseCoords:	; convert 0x0000 to x, y
-	mov dx, 0x184A ; location of mouse coord display
+	mov dx, 0x184A ; location of mouse coord display (any higher causes autoscroll of screen)
 	call moveMouse
 
 .x_coords:	
