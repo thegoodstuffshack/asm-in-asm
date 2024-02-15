@@ -18,7 +18,7 @@ printString:
 	ret
 
 ; push word as input
-; input cx as number of nibbles
+; input cx as number of nibbles (2 or 4)
 printHex:
 	push bp
 	mov bp, sp

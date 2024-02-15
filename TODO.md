@@ -13,3 +13,4 @@
 - [ ] error messages
 - [ ] backspace "deletes line", enter "creates line"
 - [ ] make arrows move to new line when at end of text
+- [ ] a way to change the current page

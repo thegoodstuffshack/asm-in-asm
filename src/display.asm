@@ -13,18 +13,16 @@ displayStatic:
 	ret
 
 displayTime:
-.where equ 0x183E
-.addr equ (0x18*80+0x3E)*2
-	mov dx, .where
+	mov dx, 0x183C
 	call moveMouse
 
 	; get time UTC
 	mov ah, 0x02
 	clc ; clear carry flag
 	int 0x1A
-	
+
 	push cx
-	mov cl, ch
+	call .adjustTime
 	push cx
 	mov cx, 2
 	call printHex
@@ -34,8 +32,61 @@ displayTime:
 	call printHex
 	ret
 
+.adjustTime:
+	; adjust ch and mov to cl
+	mov al, ch
+	cmp al, 0b00100000
+	jae .two
+	cmp al, 0b00010000
+	jae .one
+.zero:
+	mov al, 0
+	jmp .tensdone
+.one:
+	mov al, 10
+	jmp .tensdone
+.two:
+	mov al, 20
+
+.tensdone:
+	and ch, 0b00001111
+	add ch, al
+	add ch, UTC_TIME_OFFSET
+	cmp ch, 0
+	jl .lowerthanzero
+	cmp ch, 24
+	jl .adjust_end
+
+.higherthan24:
+	sub ch, 24
+	jmp .adjust_end
+
+.lowerthanzero:
+	add ch, 24
+
+.adjust_end:
+	; turn ascii to BCD
+	mov cl, ch
+	cmp cl, 10
+	jb .done
+	cmp cl, 20
+	jae .above
+
+	sub ch, 10
+	mov cl, 0x10
+	add cl, ch
+	jmp .done
+
+.above:
+	sub ch, 20
+	mov cl, 0x20
+	add cl, ch
+
+.done:
+	ret
+
 displayPage:
-	mov dx, 0x1844
+	mov dx, 0x1843
 	call moveMouse
 
 	mov si, displayPage.string
