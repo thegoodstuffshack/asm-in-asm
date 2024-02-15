@@ -55,7 +55,7 @@ start:
 	call displayStatic
 	
 	mov al, 14
-	call printChar
+	call printChar	; test print
 
 .loop:
 	xor ax, ax

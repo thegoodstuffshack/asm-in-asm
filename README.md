@@ -1,7 +1,7 @@
 # asm-in-asm
 
 ## AIM
-- create a bios mode app for bare-metal that can edit memory and then execute it, thereby writing asm in asm
+- create a bios mode program for bare-metal that can edit memory and then execute it, thereby writing asm in asm
 
 ### REQUIREMENTS
 - nasm for compiler
