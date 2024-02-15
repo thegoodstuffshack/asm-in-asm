@@ -9,5 +9,7 @@
 - [ ] save input code as both plaintext and binary (for debug)
 - [ ] be able to load code from file and edit
 - [ ] configurable text colour
-- [ ] tabs
+- [ ] tabs displace text and align to tab length
 - [ ] error messages
+- [ ] backspace "deletes line", enter "creates line"
+- [ ] make arrows move to new line when at end of text

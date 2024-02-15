@@ -79,9 +79,6 @@ printInput:
 	call printChar
 	mov al, 8
 	call printChar
-
-	push word [MOUSE_POS]
-	call printHex
 	ret
 
 .enter:

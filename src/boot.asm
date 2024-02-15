@@ -38,9 +38,11 @@ start:
 	mov al, 0
 	mov [PAGE], al
 	call setPage
+	xor dx, dx
+	call moveMouse
 	call updateMouseCoords
-	call displayMouseCoords
-
+	call displayStatic
+	
 	mov al, 14
 	call printChar
 
@@ -49,10 +51,10 @@ start:
 	call getInput
 	call printInput
 	call updateMouseCoords
-	call displayMouseCoords
+	call displayStatic
 	jmp .loop
 
-boot_bool_corrupted:	;
+boot_bool_corrupted:	; could set true, give error then return to program
 other_errors:			; currently undefined
 	cli
 	hlt
@@ -64,6 +66,7 @@ other_errors:			; currently undefined
 %include "src/parse.asm"
 %include "src/compile.asm"
 %include "src/video.asm"
+%include "src/display.asm"
 
 times 510-($-$$) db 0
 dw 0xAA55

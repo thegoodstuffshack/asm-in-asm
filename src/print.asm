@@ -17,12 +17,13 @@ printString:
 	loop .loop
 	ret
 
-; push ax as input
+; push word as input
+; input cx as number of nibbles
 printHex:
 	push bp
 	mov bp, sp
 
-	mov cx, 4
+	; mov cx, 4
 .loop:
 	push cx
 	mov ax, 4
