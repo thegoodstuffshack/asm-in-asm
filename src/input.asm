@@ -18,6 +18,8 @@ printInput:
 	je .backspace
 	cmp al, 13
 	je .enter
+	cmp al, 127
+	je .clear_page
 
 	call printChar
 	ret
@@ -85,4 +87,13 @@ printInput:
 	call printChar
 	mov al, 10
 	call printChar
+	ret
+
+.clear_page:
+	mov ah, 0x06
+	mov al, 0
+	mov bh, 7
+	xor cx, cx
+	mov dx, 0x1850
+	int 0x10
 	ret
