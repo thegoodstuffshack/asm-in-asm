@@ -10,12 +10,19 @@ MAX_HEADS		db 16
 MAX_CYLINDERS	db 1
 
 ;; "PROGRAM VARIABLES" - for use in this program only (memory can used in other programs, but why?)
-SECTOR_COUNT	db 1	; starts as 1
-HEAD_COUNT		db 0
-CYLINDER_COUNT	db 0
-MOUSE_POS 		dw 0x0000
-PAGE			db 0
-UTC_TIME_OFFSET equ 11	; set to desired UTC+ (can be negative)
+SECTOR_COUNT		db 1	; starts as 1
+HEAD_COUNT			db 0
+CYLINDER_COUNT		db 0
+MOUSE_POS 			dw 0x0000
+PAGE				db 0
+VIDEO_MEMORY_ADDR	equ 0xB800
+EXTRA_SECTORS		equ 2
+
+; SETTINGS
+UTC_TIME_OFFSET 	equ 11	; set to desired UTC+ (can be negative)
+COMMENT_CHAR		equ ';'
+END_FILE_CHAR		equ '$'
+LINE_WRITE_OFFSET	equ 0
 
 ;; "CONSTANTS" - shouldn't modify in other programs
 BOOT_BOOL		db 0	; set to 'true' on startup
@@ -29,12 +36,14 @@ start:
 	mov sp, 0x7c00
 	mov bp, sp
 
-	;	protect BOOT_DRIVE from being overwritten when returning to program
+	; protect BOOT_DRIVE from being overwritten when returning to program
 	cmp byte [BOOT_BOOL], 1
 	ja boot_bool_corrupted
 	je .notboot
 	mov byte [BOOT_BOOL], 1
 	mov [BOOT_DRIVE], dl
+
+	; movzx ax, bl	vs	xor ah, ah	mov al, bl
 
 .notboot:
 	; set video mode 3
@@ -43,7 +52,7 @@ start:
 	dw 0x10CD	;;int 0x10
 
 	call disk_handler	; sector_count -> 2
-	mov al, 1
+	mov al, EXTRA_SECTORS
 	call load_sectors
 
 	mov al, 0
@@ -53,9 +62,19 @@ start:
 	call moveMouse
 	call updateMouseCoords
 	call displayStatic
-	
-	mov al, 14
+
+	mov al, 'm'
 	call printChar	; test print
+	mov al, 'o'
+	call printChar
+	mov al, 'v'
+	call printChar
+	mov al, 't'
+	call printChar
+	mov al, ' '
+	call printChar
+
+	call assembler ; 'assembler'
 
 .loop:
 	xor ax, ax
@@ -77,11 +96,15 @@ times 510-($-$$) db 0
 dw 0xAA55
 
 function_def_start:
-%include "src/parse.asm"
-%include "src/compile.asm"
-%include "src/video.asm"
 %include "src/display.asm"
-%include "src/mouse.asm"
 %include "src/input.asm"
+%include "src/mouse.asm"
+%include "src/video.asm"
 
-times 512-($-function_def_start) db 0
+dq 0
+%include "src/assembler.asm"
+%include "src/compile.asm"
+%include "src/instructions.asm"
+%include "src/jump_tables.asm"
+
+times EXTRA_SECTORS*512-($-function_def_start) db 0

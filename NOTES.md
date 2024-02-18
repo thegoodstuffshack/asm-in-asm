@@ -27,3 +27,23 @@
 | pop es	  	        | 07        | 1	   | 07              | pop word into es      |
 | ret                   | C3        | 1    | C3              | return from call      |
 | --------------------- | --------- | ---- | --------------- | --------------------- |
+
+
+## assembler
+#### what it does
+- ignore comments, empty lines and lines that have bad formatting (give error?)
+- convert labels into addresses 
+- read the 'file' line by line and send data to compiler as per below
+- run the compiler after detecting end of 'file'
+
+#### how it works
+1. scan line
+2. if comment, goto next line
+3. if end of file, send to compiler
+4. if there's a colon, handle as label
+5. read next word and compare to keywords
+6. if next word is keyword, send 
+
+#### Potential Bugs
+- when checking 2nd+ char/s of instruction, certain incorrect chars can sum to give a 'correct' instruction
+- if instructions given in a line are valid and there's a space between the valid set and some random gibberish, will still assemble and will ignore chars after
