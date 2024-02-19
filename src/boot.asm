@@ -69,12 +69,10 @@ start:
 	call printChar
 	mov al, 'v'
 	call printChar
-	mov al, 't'
-	call printChar
 	mov al, ' '
 	call printChar
-
-	call assembler ; 'assembler'
+	; mov al, ' '
+	; call printChar
 
 .loop:
 	xor ax, ax
@@ -82,6 +80,8 @@ start:
 	call printInput
 	call updateMouseCoords
 	call displayStatic
+
+	call assembler ; 'assembler'
 	jmp .loop
 
 boot_bool_corrupted:	; could set true, give error then return to program
