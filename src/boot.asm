@@ -10,7 +10,7 @@ MAX_HEADS		db 16
 MAX_CYLINDERS	db 1
 
 ;; "PROGRAM VARIABLES" - for use in this program only (memory can used in other programs, but why?)
-SECTOR_COUNT		db 1	; starts as 1
+SECTOR_COUNT		db 1
 HEAD_COUNT			db 0
 CYLINDER_COUNT		db 0
 MOUSE_POS 			dw 0x0000

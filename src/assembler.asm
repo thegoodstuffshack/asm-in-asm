@@ -7,15 +7,17 @@
 ; disregard addresses at start of line
 
 assembler:	; read from video memory
-	push word VIDEO_MEMORY_ADDR
-	pop es
-	xor bx, bx				; line number
-	mov si, LINE_WRITE_OFFSET	; column number
+	push bp
+	push sp
+	mov bp, sp
+	
+	xor bx, bx		; line number
 	xor di, di
 
 .loop:
-	mov ax, [es:si + bx]		; lower byte is data byte
-	
+	jmp get_line ; jmp to not mess up stack
+	.get_line_return:
+
 	cmp al, ' '
 	je .ignore_empty_line
 	cmp al, COMMENT_CHAR
@@ -27,8 +29,7 @@ assembler:	; read from video memory
 	cmp al, 122
 	ja .ignore_invalid_char
 
-	; add bx, 2
-	mov di, ax
+	mov di, [bp]
 	and di, 0x00FF
 	shl di, 1 ; x2
 	call word [di + instruction_alphabet_jump_table - 97*2]
@@ -46,4 +47,25 @@ assembler:	; read from video memory
 .end:
 	push word 0x0000
 	pop es
+	pop sp ; reset stack (doesn't clear data)
+	pop bp
 	ret
+
+; copy mem of line onto the stack
+; lower byte of word is data byte so only copy this
+get_line:
+	push word VIDEO_MEMORY_ADDR
+	pop es
+	mov si, LINE_WRITE_OFFSET	; start column number
+
+.loop:
+	cmp si, 160
+	je .end
+
+	mov al, byte [es:si + bx + 1]	; push data byte of each letter in line
+	push al
+	add si, 2
+	jmp .loop
+
+.end:
+	jmp assembler.get_line_return
